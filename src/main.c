@@ -63,16 +63,19 @@ void process_input() {
     }
 }
 
-void update() {}
+void update() {
+    ball.x +=1;
+    ball.y +=1;
+}
 
 void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_Rect ball_rect = {
-        ball.x,
-        ball.y,
-        ball.width,
-        ball.height
+        (int) ball.x,
+        (int) ball.y,
+        (int) ball.width,
+        (int) ball.height
     };
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &ball_rect);
