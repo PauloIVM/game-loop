@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include "./constants.h"
 
 // Install lib on Makefile?
 // sudo apt install libsdl2-dev
@@ -8,6 +9,7 @@
 int game_is_running = 0;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+int last_frame_time = 0;
 
 struct ball {
     float x;
@@ -64,8 +66,23 @@ void process_input() {
 }
 
 void update() {
-    ball.x +=1;
-    ball.y +=1;
+    // TODO: Comparar uso de CPU com a linha 70-73 vs 74
+    int time_to_wait = last_frame_time + FRAME_TARGET_TIME - SDL_GetTicks();
+    if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+        SDL_Delay(last_frame_time + FRAME_TARGET_TIME - SDL_GetTicks());
+    }
+    // while(!SDL_TICKS_PASSED(SDL_GetTicks(), last_frame_time + FRAME_TARGET_TIME));
+    float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
+    last_frame_time = SDL_GetTicks();
+    // Pixels per second, and not pixels per frame:
+    ball.x += 20 * delta_time;
+    ball.y += 20 * delta_time;
+    // Fazer um teste, manter como nas linhas abaixo e testar para dois valores
+    // distintos de FPS... deve mudar bastante:
+    // ball.x += 2;
+    // ball.y += 2;
+    // Em seguida, usar o delta_time criado acima, e fazer um teste pra dois
+    // valores de FPS. Deve manter parecido.
 }
 
 void render() {
